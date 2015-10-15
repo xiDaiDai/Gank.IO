@@ -1,18 +1,22 @@
 package com.isee.goose;
-
-
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
+import com.isee.goose.fragment.ItemOneFragment;
 import com.isee.goose.fragment.LeftFragment;
+import com.isee.goose.vo.ItemOne;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
+import de.greenrobot.event.EventBus;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
 
+    private String itemValue;
+
 
     private FragmentManager fragmentManager;
     private LeftFragment leftFragment;
@@ -38,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         leftFragment = new LeftFragment();
         fragmentManager.beginTransaction().add(R.id.id_left_menu_container,leftFragment).commit();
-
 
     }
 
@@ -57,8 +62,38 @@ public class MainActivity extends AppCompatActivity {
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, toolbar,R.string.abc_action_bar_home_description_format, R.string.abc_action_bar_home_description);
         mActionBarDrawerToggle.syncState();
+
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
 
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(ItemOne event) {
+        if(!event.getValue().equals(itemValue))
+        replaceFragment(R.id.id_content_container, new ItemOneFragment(),event.getValue());
+    }
+
+    public void replaceFragment(int id_content, Fragment fragment,String value) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        itemValue = value;
+        transaction.replace(id_content, fragment);
+        transaction.commit();
+    }
+    public void closeDrawer(){
+        mDrawerLayout.closeDrawers();
+    }
+
 }

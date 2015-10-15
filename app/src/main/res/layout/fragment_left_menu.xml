@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/background_material_dark"
+    android:background="@color/background_material_light"
     android:layout_height="match_parent">
 
 
     <TextView
-        android:textColor="@color/background_material_light"
+        android:gravity="center"
+        android:textColor="@color/background_material_dark"
         android:padding="20dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="item_one"
         android:id="@+id/textView"
+
         android:layout_gravity="center_horizontal" />
 
     <View
@@ -19,11 +21,11 @@
         android:layout_height="1dp"
         android:background="#b4b4b4"/>
     <TextView
-        android:textColor="@color/background_material_light"
+        android:textColor="@color/background_material_dark"
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item_one"
+        android:text="item_two"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
 
@@ -32,11 +34,11 @@
         android:layout_height="1dp"
         android:background="#b4b4b4"/>
     <TextView
-        android:textColor="@color/background_material_light"
+        android:textColor="@color/background_material_dark"
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item_one"
+        android:text="item_three"
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal" />
 
@@ -47,11 +49,11 @@
 
     <TextView
 
-        android:textColor="@color/background_material_light"
+        android:textColor="@color/background_material_dark"
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item_one"
+        android:text="item_four"
         android:id="@+id/textView4"
         android:layout_gravity="center_horizontal" />
 
