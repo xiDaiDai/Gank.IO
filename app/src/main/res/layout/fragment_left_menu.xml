@@ -11,7 +11,8 @@
         android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="item_one"
+        android:text="Android"
+        android:textStyle="bold"
         android:id="@+id/textView"
 
         android:layout_gravity="center_horizontal" />
@@ -25,7 +26,8 @@
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item_two"
+        android:text="妹纸"
+        android:textStyle="bold"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
 

@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
-import com.isee.goose.fragment.ItemOneFragment;
+import com.isee.goose.fragment.AndroidFragment;
 import com.isee.goose.fragment.LeftFragment;
 import com.isee.goose.vo.ItemOne;
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onEventMainThread(ItemOne event) {
         if(!event.getValue().equals(itemValue))
-        replaceFragment(R.id.id_content_container, new ItemOneFragment(),event.getValue());
+        replaceFragment(R.id.id_content_container, new AndroidFragment(),event.getValue());
     }
 
     public void replaceFragment(int id_content, Fragment fragment,String value) {
