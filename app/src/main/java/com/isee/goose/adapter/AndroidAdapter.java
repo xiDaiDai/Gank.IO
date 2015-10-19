@@ -30,6 +30,11 @@ public class AndroidAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void add(List<AndroidInfo> datas) {
+        this.datas.addAll(datas);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return datas.size();

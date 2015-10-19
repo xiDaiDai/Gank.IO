@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         leftFragment = new LeftFragment();
         fragmentManager.beginTransaction().add(R.id.id_left_menu_container,leftFragment).commit();
-
+        EventBus.getDefault().register(this);
     }
 
     private void  initToolBar(){
@@ -66,13 +66,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
 
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
