@@ -91,11 +91,6 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
         loadData();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     void loadData(){
         page = 1;
         mOkHttpClient = OkHttpManager.getInstance();

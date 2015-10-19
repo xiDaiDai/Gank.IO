@@ -5,9 +5,9 @@ package com.isee.goose.vo;
  */
 public class ItemOne {
     private String name;
-    private String value;
+    private int value;
 
-    public ItemOne(String name, String value) {
+    public ItemOne(String name, int value) {
         this.name = name;
         this.value = value;
     }
@@ -16,7 +16,7 @@ public class ItemOne {
         return name;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 }

@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
+import com.isee.goose.app.Config;
+import com.isee.goose.app.Global;
 import com.isee.goose.fragment.AndroidFragment;
 import com.isee.goose.fragment.LeftFragment;
+import com.isee.goose.fragment.MeizhiFragment;
 import com.isee.goose.vo.ItemOne;
 
 import org.androidannotations.annotations.AfterViews;
@@ -23,18 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
     @ViewById(R.id.id_content_container)
     FrameLayout contentFrameLayout;
-
     @ViewById(R.id.id_toolbar)
     Toolbar toolbar;
-
     @ViewById(R.id.id_drawerlayout)
     DrawerLayout mDrawerLayout;
-
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-
     private String itemValue;
-
-
     private FragmentManager fragmentManager;
     private LeftFragment leftFragment;
     @AfterViews
@@ -58,14 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private void initTogle() {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerlayout);
-
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, toolbar,R.string.abc_action_bar_home_description_format, R.string.abc_action_bar_home_description);
         mActionBarDrawerToggle.syncState();
-
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-
-
     }
 
     @Override
@@ -75,13 +68,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEventMainThread(ItemOne event) {
-        if(!event.getValue().equals(itemValue))
-        replaceFragment(R.id.id_content_container, new AndroidFragment(),event.getValue());
+        Global.showToast("click item event.");
+        Fragment fragment = null;
+        switch (event.getValue()){
+            case Config.ANDROID:
+                fragment =  new AndroidFragment();
+                break;
+            case Config.MEIZHI:
+                fragment = new MeizhiFragment();
+                break;
+
+        }
+        replaceFragment(R.id.id_content_container,fragment,event.getName());
     }
 
     public void replaceFragment(int id_content, Fragment fragment,String value) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        itemValue = value;
         transaction.replace(id_content, fragment);
         transaction.commit();
     }
