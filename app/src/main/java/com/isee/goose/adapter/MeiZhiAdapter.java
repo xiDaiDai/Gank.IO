@@ -6,13 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
 import com.isee.goose.R;
 import com.isee.goose.vo.AndroidInfo;
-import com.isee.goose.vo.MeiZhiInfo;
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 /**
@@ -66,9 +62,18 @@ public class MeiZhiAdapter extends BaseAdapter {
 
         AndroidInfo data = getItem(i);
 
-        Picasso.with(context).load(data.url).into(viewHolder.imageView);
+        Glide.with(context)
+                .load(data.url)
+                .placeholder(R.drawable.default_logo)
+                .error(R.drawable.default_logo)
+                .into(viewHolder.imageView);
+
+
+
         return view;
     }
+
+
 
     class ViewHolder {
 

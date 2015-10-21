@@ -13,8 +13,10 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.isee.goose.R;
 import com.isee.goose.adapter.AndroidAdapter;
+import com.isee.goose.app.Global;
 import com.isee.goose.net.OkHttpManager;
 import com.isee.goose.net.RemoteConfig;
+import com.isee.goose.util.ViewUtils;
 import com.isee.goose.vo.AndroidInfo;
 import com.isee.goose.vo.BaseResult;
 import com.squareup.okhttp.Call;
@@ -45,6 +47,7 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
     private List<AndroidInfo> datas;
     private  BaseResult result;
     private PtrClassicFrameLayout ptrFrameLayout;
+    private View loadingMask;
     private LoadMoreListViewContainer loadMoreListViewContainer;
     private  OkHttpClient mOkHttpClient;
     private int page;
@@ -56,6 +59,7 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
                 case 0:
                     mAdapter.update(result.androidInfoList);
                     ptrFrameLayout.refreshComplete();
+                   ViewUtils.goneView(loadingMask);
                     break;
                 case 1:
                     ptrFrameLayout.refreshComplete();
@@ -72,6 +76,7 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_one, container);
         mActivity = getActivity();
+        loadingMask = view.findViewById(R.id.llLoadingMask);
         ptrFrameLayout = (PtrClassicFrameLayout) view.findViewById(R.id.load_more_list_view_ptr_frame);
         loadMoreListViewContainer = (LoadMoreListViewContainer) view.findViewById(R.id.load_more_list_view_container);
         listview = (ListView) view.findViewById(R.id.list_view);
@@ -86,8 +91,8 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         loadData();
     }
 

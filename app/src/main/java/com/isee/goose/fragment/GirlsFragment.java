@@ -4,13 +4,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.isee.goose.R;
+import com.isee.goose.adapter.GirlsAdapter;
 import com.isee.goose.adapter.MeiZhiAdapter;
 import com.isee.goose.net.OkHttpManager;
 import com.isee.goose.net.RemoteConfig;
@@ -40,17 +45,18 @@ import in.srain.cube.views.ptr.PtrHandler;
 /**
  * Created by wuyun on 2015/10/19.
  */
-public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandler {
-    private LoadMoreGridViewContainer loadMoreGridViewContainer;
-    private GridViewWithHeaderAndFooter gridViewWithHeaderAndFooter;
-    private PtrClassicFrameLayout ptrFrameLayout;
+public class GirlsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+
     private View loadingMask;
-    private MeiZhiAdapter mAdapter;
+    private GirlsAdapter mAdapter;
     private  BaseResult result;
     private List<AndroidInfo> datas;
-
     private int page;
     private OkHttpClient mOkHttpClient;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private FloatingActionButton fab;
+
 
     private Handler mHandler =new Handler(){
         @Override
@@ -58,18 +64,17 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
             super.handleMessage(msg);
             switch (msg.what){
                 case 0:
-                    mAdapter.update(result.androidInfoList);
-                    ptrFrameLayout.refreshComplete();
-                    ViewUtils.goneView(loadingMask);
-                    loadingMask.setVisibility(View.GONE);
-                    CLog.e("what","0");
+                    datas.clear();
+                    datas.addAll(result.androidInfoList);
+                    mAdapter.notifyDataSetChanged();
+                    swipeRefreshLayout.setRefreshing(false);
                     break;
                 case 1:
-                    ptrFrameLayout.refreshComplete();
+                    swipeRefreshLayout.setRefreshing(false);
                     break;
                 case 2:
-                    mAdapter.add(result.androidInfoList);
-                    loadMoreGridViewContainer.loadMoreFinish(false,true);
+                    datas.addAll(result.androidInfoList);
+                    mAdapter.notifyDataSetChanged();
                     break;
             }
 
@@ -80,19 +85,52 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meizhi,container);
-        loadMoreGridViewContainer = (LoadMoreGridViewContainer) view.findViewById(R.id.load_more_grid_view_container);
-        ptrFrameLayout = (PtrClassicFrameLayout) view.findViewById(R.id.load_more_grid_view_ptr_frame);
-        gridViewWithHeaderAndFooter = (GridViewWithHeaderAndFooter) view.findViewById(R.id.load_more_grid_view);
-        loadingMask = view.findViewById(R.id.llLoadingMask);
-        ptrFrameLayout.setPtrHandler(this);
-        loadMoreGridViewContainer.setLoadMoreHandler(this);
-        loadMoreGridViewContainer.useDefaultHeader();
+        View view = inflater.inflate(R.layout.fragment_girls, container);
+        initView(view);
         datas = new ArrayList<AndroidInfo>();
-        mAdapter = new MeiZhiAdapter(getActivity(),datas);
-        gridViewWithHeaderAndFooter.setAdapter(mAdapter);
-
+        setUpRecyclerView();
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void initView(View view) {
+        loadingMask = view.findViewById(R.id.llLoadingMask);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_girls);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.material_blue,
+                R.color.material_green
+        );
+        fab = (FloatingActionButton) view.findViewById(R.id.main_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFab();
+            }
+        });
+    }
+
+
+    private void setUpRecyclerView() {
+        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(
+                2, StaggeredGridLayoutManager.VERTICAL
+        );
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new GirlsAdapter(getActivity(),datas);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView rv, int dx, int dy) {
+                        if (!swipeRefreshLayout.isRefreshing() && layoutManager.findLastCompletelyVisibleItemPositions(
+                                new int[2]
+                        )[1] >= mAdapter.getItemCount() - 2) {
+
+                            loadMore();
+                        }
+                    }
+                }
+        );
     }
 
     @Override
@@ -156,21 +194,16 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
         });
     }
 
-    @Override
-    public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View view1) {
-        boolean iscan = PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, gridViewWithHeaderAndFooter, view1);
-        if(iscan) CLog.e("load","iscanload");
-        return true;
-    }
 
     @Override
-    public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-           CLog.e("load","refresh begin");
-            loadData();
+    public void onRefresh() {
+        loadData();
     }
 
-    @Override
-    public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-        loadMore();
+    public void onFab(){
+        loadData();
+        if(!swipeRefreshLayout.isRefreshing())
+        swipeRefreshLayout.setRefreshing(true);
+
     }
 }

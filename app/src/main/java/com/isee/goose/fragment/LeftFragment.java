@@ -2,21 +2,15 @@ package com.isee.goose.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.isee.goose.MainActivity;
 import com.isee.goose.R;
-import com.isee.goose.app.Config;
-import com.isee.goose.app.Global;
-import com.isee.goose.vo.ItemOne;
+import com.isee.goose.vo.MenuItem;
 
 
 import de.greenrobot.event.EventBus;
@@ -44,24 +38,15 @@ private MainActivity mainActivity;
 
     }
 
-
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
-
     @Override
     public void onClick(View view) {
         mainActivity.closeDrawer();
         switch (view.getId()){
             case R.id.textView:
-                EventBus.getDefault().post(new ItemOne("One",Config.ANDROID));
+                EventBus.getDefault().post(new MenuItem("android",MenuItem.FragmentType.ANDROID,AndroidFragment.class));
                 break;
             case R.id.textView_meizhi:
-                EventBus.getDefault().post(new ItemOne("two",Config.MEIZHI));
+                EventBus.getDefault().post(new MenuItem("meizhi",MenuItem.FragmentType.MEIZHI,MeizhiFragment.class));
                 break;
         }
 

@@ -7,4 +7,6 @@ public class Config {
 
     public  static final int ANDROID = 0;
     public static final int MEIZHI = 1;
+
+    public static final  String TITLE = "title";
 }

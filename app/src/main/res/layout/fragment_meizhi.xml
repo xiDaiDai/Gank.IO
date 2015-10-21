@@ -9,11 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <in.srain.cube.views.loadmore.LoadMoreGridViewContainer
             android:id="@+id/load_more_grid_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/cube_mints_666666">
+            android:background="@color/cube_mints_f1f1f1">
 
             <in.srain.cube.views.GridViewWithHeaderAndFooter
                 android:id="@+id/load_more_grid_view"
@@ -21,14 +25,15 @@
                 android:layout_height="match_parent"
                 android:fadingEdge="none"
                 android:focusable="false"
-                android:horizontalSpacing="10dp"
+                android:horizontalSpacing="5dp"
+                android:verticalSpacing="5dp"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="2"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
                 android:scrollbarStyle="outsideOverlay"
                 android:stretchMode="columnWidth" />
 
         </in.srain.cube.views.loadmore.LoadMoreGridViewContainer>
+            <include layout="@layout/lay_loading_mask"/>
+        </FrameLayout>
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 </RelativeLayout>

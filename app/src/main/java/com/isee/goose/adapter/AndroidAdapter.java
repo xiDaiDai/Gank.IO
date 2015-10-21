@@ -1,6 +1,7 @@
 package com.isee.goose.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +67,10 @@ public class AndroidAdapter extends BaseAdapter {
         return view;
     }
 
-    class ViewHolder {
+    class ViewHolder{
         private TextView textView;
+
+
     }
 
 
