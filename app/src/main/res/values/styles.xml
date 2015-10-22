@@ -3,9 +3,10 @@
 <!-- Base application theme. -->
 <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
-    <item name="colorPrimary">@color/background_material_dark</item>
+    <item name="colorPrimary">@color/cube_holo_purple</item>
+    <item name="colorPrimaryDark">#3A5FCD</item>
     //设置backarrow 颜色
-    <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+   <!-- <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>-->
 </style>
 
 <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">

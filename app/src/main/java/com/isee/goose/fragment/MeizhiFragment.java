@@ -1,5 +1,6 @@
 package com.isee.goose.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.google.gson.Gson;
+import com.isee.goose.PictureActivity;
 import com.isee.goose.R;
 import com.isee.goose.adapter.MeiZhiAdapter;
 import com.isee.goose.net.OkHttpManager;
@@ -61,8 +64,6 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
                     mAdapter.update(result.androidInfoList);
                     ptrFrameLayout.refreshComplete();
                     ViewUtils.goneView(loadingMask);
-                    loadingMask.setVisibility(View.GONE);
-                    CLog.e("what","0");
                     break;
                 case 1:
                     ptrFrameLayout.refreshComplete();
@@ -80,7 +81,7 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meizhi,container);
+        View view = inflater.inflate(R.layout.fragment_meizhi,container,false);
         loadMoreGridViewContainer = (LoadMoreGridViewContainer) view.findViewById(R.id.load_more_grid_view_container);
         ptrFrameLayout = (PtrClassicFrameLayout) view.findViewById(R.id.load_more_grid_view_ptr_frame);
         gridViewWithHeaderAndFooter = (GridViewWithHeaderAndFooter) view.findViewById(R.id.load_more_grid_view);
@@ -91,8 +92,16 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
         datas = new ArrayList<AndroidInfo>();
         mAdapter = new MeiZhiAdapter(getActivity(),datas);
         gridViewWithHeaderAndFooter.setAdapter(mAdapter);
-
-        return super.onCreateView(inflater, container, savedInstanceState);
+        gridViewWithHeaderAndFooter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+               AndroidInfo androidInfo = (AndroidInfo) adapterView.getAdapter().getItem(i);
+                Intent intent = new Intent(getActivity(), PictureActivity.class);
+                intent.putExtra(PictureActivity.EXTRA_IMAGE_URL, androidInfo.url);
+                getActivity().startActivity(intent);
+            }
+        });
+        return view;
     }
 
     @Override
@@ -158,14 +167,11 @@ public class MeizhiFragment extends Fragment implements PtrHandler,LoadMoreHandl
 
     @Override
     public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View view1) {
-        boolean iscan = PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, gridViewWithHeaderAndFooter, view1);
-        if(iscan) CLog.e("load","iscanload");
-        return true;
+        return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, gridViewWithHeaderAndFooter, view1);
     }
 
     @Override
     public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-           CLog.e("load","refresh begin");
             loadData();
     }
 

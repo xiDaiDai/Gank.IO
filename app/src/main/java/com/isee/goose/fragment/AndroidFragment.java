@@ -57,9 +57,11 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
             super.handleMessage(msg);
             switch (msg.what){
                 case 0:
-                    mAdapter.update(result.androidInfoList);
+                    datas.clear();
+                    datas.addAll(result.androidInfoList);
+                    mAdapter.notifyDataSetChanged();
                     ptrFrameLayout.refreshComplete();
-                   ViewUtils.goneView(loadingMask);
+                    ViewUtils.goneView(loadingMask);
                     break;
                 case 1:
                     ptrFrameLayout.refreshComplete();
@@ -72,9 +74,16 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
             }
         }
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_one, container);
+        View view = inflater.inflate(R.layout.fragment_item_one,container,false);
         mActivity = getActivity();
         loadingMask = view.findViewById(R.id.llLoadingMask);
         ptrFrameLayout = (PtrClassicFrameLayout) view.findViewById(R.id.load_more_list_view_ptr_frame);
@@ -86,7 +95,7 @@ public class AndroidFragment extends Fragment implements PtrHandler,LoadMoreHand
         ptrFrameLayout.setPtrHandler(this);
         loadMoreListViewContainer.setLoadMoreHandler(this);
         loadMoreListViewContainer.useDefaultHeader();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view ;
 
     }
 

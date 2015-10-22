@@ -1,4 +1,5 @@
 package com.isee.goose;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
@@ -9,6 +10,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.isee.goose.app.Config;
@@ -16,12 +19,9 @@ import com.isee.goose.app.Global;
 import com.isee.goose.fragment.AndroidFragment;
 import com.isee.goose.fragment.GirlsFragment;
 import com.isee.goose.fragment.MeizhiFragment;
-import com.isee.goose.vo.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-import in.srain.cube.util.CLog;
 
 public class MainActivity extends AppCompatActivity {
     FrameLayout contentFrameLayout;
@@ -30,9 +30,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private FragmentManager fragmentManager;
-    private  MenuItem.FragmentType currentFragment = MenuItem.FragmentType.ANDROID;
     private List<Fragment> fragmentList;
-    private String[] drawerTitles = {"Android", "MEiZHI", "Setting"};
+    private String[] drawerTitles = {"Android", "MEIZHI", "MeiZhi"};
     private Class[] classes = {AndroidFragment.class, MeizhiFragment.class, GirlsFragment.class};
 
     @Override
@@ -45,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
         initTogle();
         setDrawerContent(navigationView);
         selectItem(0);
-        EventBus.getDefault().register(this);
     }
 
     public void initView(){
+
+        fragmentManager = getSupportFragmentManager();
         contentFrameLayout = (FrameLayout) findViewById(R.id.id_content_container);
         toolbar= (Toolbar) findViewById(R.id.id_toolbar);
         mDrawerLayout= (DrawerLayout) findViewById(R.id.id_drawerlayout);
@@ -64,9 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void  initToolBar(){
         toolbar.setTitle(R.string.app_name);
-        toolbar.setTitleTextColor(0xffeeeeee);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(android.R.drawable.ic_popup_sync);
+        //toolbar.setNavigationIcon(android.R.drawable.ic_popup_sync);
 
     }
 
@@ -104,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItem(int position) {
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         //先隐藏所有fragment
         for (Fragment fragment : fragmentList) {
@@ -121,41 +121,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             fragment = fragmentList.get(position);
             fragmentTransaction.show(fragment);
-            CLog.e("fragment","------------------"+position);
         }
         fragmentTransaction.commit();
 
         getSupportActionBar().setTitle(drawerTitles[position]);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
 
-    public void onEventMainThread(MenuItem event){
-
-        try {
-            if (currentFragment != event.getType()) {
-                Fragment fragment = (Fragment) Class.forName(event.getFragment()
-                        .getName()).newInstance();
-                replaceFragment(R.id.id_content_container, fragment, event.getTitle());
-                currentFragment = event.getType();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-            closeDrawer();
-
-    }
-
-    public void replaceFragment(int id_content, Fragment fragment,String value) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(id_content, fragment);
-        transaction.commit();
-    }
     public void closeDrawer(){
         mDrawerLayout.closeDrawers();
     }
@@ -171,4 +143,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,"meizhi");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent,getResources().getString(R
+                        .string.app_name)));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

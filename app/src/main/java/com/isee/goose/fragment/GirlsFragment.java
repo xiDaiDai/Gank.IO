@@ -68,6 +68,7 @@ public class GirlsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     datas.addAll(result.androidInfoList);
                     mAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
+                    ViewUtils.goneView(loadingMask);
                     break;
                 case 1:
                     swipeRefreshLayout.setRefreshing(false);
@@ -85,11 +86,11 @@ public class GirlsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_girls, container);
+        View view = inflater.inflate(R.layout.fragment_girls, container,false);
         initView(view);
         datas = new ArrayList<AndroidInfo>();
         setUpRecyclerView();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     private void initView(View view) {
@@ -125,7 +126,6 @@ public class GirlsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         if (!swipeRefreshLayout.isRefreshing() && layoutManager.findLastCompletelyVisibleItemPositions(
                                 new int[2]
                         )[1] >= mAdapter.getItemCount() - 2) {
-
                             loadMore();
                         }
                     }

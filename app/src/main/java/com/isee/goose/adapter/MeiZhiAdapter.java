@@ -64,8 +64,8 @@ public class MeiZhiAdapter extends BaseAdapter {
 
         Glide.with(context)
                 .load(data.url)
-                .placeholder(R.drawable.default_logo)
-                .error(R.drawable.default_logo)
+                .placeholder(R.drawable.header_view)
+                .error(R.drawable.header_view)
                 .into(viewHolder.imageView);
 
 

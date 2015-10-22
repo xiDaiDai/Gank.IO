@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
-def AAVersion = '3.2'
+
 
 buildscript {
     repositories {
@@ -58,8 +58,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
-    apt "org.androidannotations:androidannotations:$AAVersion"
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
     compile 'in.srain.cube:clog:1.0.2'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'in.srain.cube:cube-sdk:1.0.44@aar'
@@ -70,6 +68,8 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.commit451:PhotoView:1.2.4'
+
 
 
 }
